@@ -12,8 +12,8 @@ using weatherApi.Data;
 namespace weatherApi.Migrations
 {
     [DbContext(typeof(WeatherContext))]
-    [Migration("20230809020642_CreatingWeatherTable")]
-    partial class CreatingWeatherTable
+    [Migration("20230810015736_createWeatherDatabase")]
+    partial class createWeatherDatabase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,31 +27,29 @@ namespace weatherApi.Migrations
 
             modelBuilder.Entity("weatherApi.Models.WeatherModel", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("uuid");
 
                     b.Property<string>("City")
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<DateOnly>("Date")
+                        .HasColumnType("date");
+
+                    b.Property<float>("Max_temperature")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Min_temperature")
+                        .HasColumnType("real");
+
                     b.Property<int>("Weater")
                         .HasColumnType("integer");
 
-                    b.Property<DateOnly>("data")
-                        .HasColumnType("date");
-
-                    b.Property<float>("max_temperature")
-                        .HasColumnType("real");
-
-                    b.Property<float>("min_temperature")
-                        .HasColumnType("real");
-
                     b.HasKey("Id");
 
-                    b.ToTable("WeatherModels");
+                    b.ToTable("Weathers");
                 });
 #pragma warning restore 612, 618
         }

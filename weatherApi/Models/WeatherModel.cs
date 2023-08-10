@@ -6,13 +6,13 @@ namespace weatherApi.Models
     {
         [Key]
         [Required]
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         [Required]
         public string City { get; set; }
 
         [Required]
-        public DateOnly Data { get; set; }
+        public DateOnly Date { get; set; }
 
         [Required]
         public float Max_temperature { get; set; }

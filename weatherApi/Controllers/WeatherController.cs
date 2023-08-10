@@ -30,14 +30,14 @@ namespace weatherApi.Controllers
         }
 
         [HttpPut("/api/Weather/{id}")]
-        public void Put(int id, [FromBody] WeatherModel model)
+        public void Put(Guid id, [FromBody] WeatherModel model)
         {
             var old = weatherContext.Weathers.FirstOrDefault(x => x.Id == id);
 
             if ( old != null)
             {
                 old.City = model.City;
-                old.Data = model.Data;
+                old.Date = model.Date;
                 old.Max_temperature = model.Max_temperature;
                 old.Min_temperature = model.Min_temperature;
                 old.Weater = model.Weater;
@@ -47,7 +47,7 @@ namespace weatherApi.Controllers
         }
 
         [HttpDelete("/api/Weather/{id}")]
-        public void Delete(int id)
+        public void Delete(Guid id)
         {
             var element = weatherContext.Weathers.FirstOrDefault(x => x.Id == id);
 

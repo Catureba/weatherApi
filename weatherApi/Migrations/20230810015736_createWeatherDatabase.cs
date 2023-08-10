@@ -1,32 +1,30 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
 namespace weatherApi.Migrations
 {
     /// <inheritdoc />
-    public partial class CreatingWeatherTable : Migration
+    public partial class createWeatherDatabase : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "WeatherModels",
+                name: "Weathers",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
                     City = table.Column<string>(type: "text", nullable: false),
-                    data = table.Column<DateOnly>(type: "date", nullable: false),
-                    max_temperature = table.Column<float>(type: "real", nullable: false),
-                    min_temperature = table.Column<float>(type: "real", nullable: false),
+                    Date = table.Column<DateOnly>(type: "date", nullable: false),
+                    Max_temperature = table.Column<float>(type: "real", nullable: false),
+                    Min_temperature = table.Column<float>(type: "real", nullable: false),
                     Weater = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_WeatherModels", x => x.Id);
+                    table.PrimaryKey("PK_Weathers", x => x.Id);
                 });
         }
 
@@ -34,7 +32,7 @@ namespace weatherApi.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "WeatherModels");
+                name: "Weathers");
         }
     }
 }
