@@ -1,62 +1,63 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using weatherApi.Data;
+using weatherApi.Interfaces;
 using weatherApi.Models;
 
 namespace weatherApi.Controllers
 {
     [ApiController]
     [Route("api/[Controller]")]
-    public class WeatherController : Controller
+    public class WeatherController : ControllerBase
     {
         private WeatherContext weatherContext;
-        public WeatherController(WeatherContext Context)
+        private IWeatherService weatherService;
+        public WeatherController(WeatherContext Context, IWeatherService weatherService)
         {
             weatherContext = Context;
+            this.weatherService = weatherService;
         }
 
         [HttpGet]
         public IEnumerable<WeatherModel> GetAllRegisters()
         {
-            return weatherContext.Weathers;
+            return weatherService.ListAll();
+        }
+
+        [HttpGet("/api/Weather/id/{id}")]
+        public IActionResult GetById(Guid id)
+        {
+            var response = weatherService.FindByID(id);
+            return Ok(response);
+        }
+
+        [HttpGet("/api/Weather/city/{city}")]
+        public IEnumerable<WeatherModel>? GetAllByCity(string city)
+        {
+            return weatherService.FindByCity(city);
+        }
+
+        [HttpGet("/api/Weather/next7/{city}")]
+        public IEnumerable<WeatherModel>? GetNextSevenDaysByCity(string city)
+        {
+            return weatherService.ListNextSeven(city);
         }
 
         [HttpPost]
-        public void Post([FromBody] WeatherModel model)
+        public WeatherModel? Post([FromBody] WeatherModel model)
         {
-            
-            weatherContext.Weathers.Add(model);
-            weatherContext.SaveChanges();
-            Console.WriteLine(model.City);
+            return weatherService.AddWeather(model);
         }
 
         [HttpPut("/api/Weather/{id}")]
-        public void Put(Guid id, [FromBody] WeatherModel model)
+        public WeatherModel? Put(Guid id, [FromBody] WeatherModel model)
         {
-            var old = weatherContext.Weathers.FirstOrDefault(x => x.Id == id);
-
-            if ( old != null)
-            {
-                old.City = model.City;
-                old.Date = model.Date;
-                old.Max_temperature = model.Max_temperature;
-                old.Min_temperature = model.Min_temperature;
-                old.Weater = model.Weater;
-                weatherContext.SaveChanges();
-            }
-
+            return weatherService.EditWeather(id, model);
         }
 
         [HttpDelete("/api/Weather/{id}")]
-        public void Delete(Guid id)
+        public WeatherModel? Delete(Guid id)
         {
-            var element = weatherContext.Weathers.FirstOrDefault(x => x.Id == id);
-
-            if (element != null)
-            {
-                weatherContext.Weathers.Remove(element);
-                weatherContext.SaveChanges();
-            }
-
+           return weatherService.DeleteWeather(id);
         }
 
     }

@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Runtime.Serialization;
+using System.Security.Claims;
 
 namespace weatherApi.Models
 {
@@ -12,7 +14,7 @@ namespace weatherApi.Models
         public string City { get; set; }
 
         [Required]
-        public DateOnly Date { get; set; }
+        public DateTime Date { get; set; }
 
         [Required]
         public float Max_temperature { get; set; }
@@ -21,14 +23,22 @@ namespace weatherApi.Models
         public float Min_temperature { get; set; }
 
         [Required]
-        public WeatherType Weater { get; set; }
+        [EnumDataType(typeof(WeatherType))]
+        public WeatherType Weather { get; set; }
         public WeatherModel() { }
 
-        public enum WeatherType
+        public enum WeatherType : int
         {
-            RAINY,
-            SUNNY,
-            OVERCAST,
+            [EnumMember(Value = "RAINY")]
+            RAINY = 0,
+            [EnumMember(Value = "SUNNY")]
+            SUNNY = 1,
+            [EnumMember(Value = "OVERCAST")]
+            OVERCAST = 2,
+            [EnumMember(Value = "TROPICAIS")]
+            TROPICAIS = 3,
+            [EnumMember(Value = "SHAKESPEARE")]
+            SHAKESPEARE = 4,
         }
 
     }
