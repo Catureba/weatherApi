@@ -7,9 +7,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddDbContext<WeatherContext>(opts => opts.UseNpgsql(builder.Configuration.GetConnectionString("WeatherConection")));
+builder.Services.AddDbContext<MeteorologicalContext>(opts => opts.UseNpgsql(builder.Configuration.GetConnectionString("WeatherConection")));
 
-builder.Services.AddScoped<IWeatherService, WeatherService > ();
+builder.Services.AddScoped<IMeteorologicalService, MeteorologicalService > ();
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 //builder.Services.AddSingleton <IWeatherService, WeatherService>();
 
 builder.Services.AddControllers();

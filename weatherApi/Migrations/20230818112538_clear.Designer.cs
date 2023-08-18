@@ -11,9 +11,9 @@ using weatherApi.Data;
 
 namespace weatherApi.Migrations
 {
-    [DbContext(typeof(WeatherContext))]
-    [Migration("20230814193011_WeatherModel-refactor")]
-    partial class WeatherModelrefactor
+    [DbContext(typeof(MeteorologicalContext))]
+    [Migration("20230818112538_clear")]
+    partial class clear
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace weatherApi.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("weatherApi.Models.WeatherModel", b =>
+            modelBuilder.Entity("weatherApi.Models.MeteorologicalModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -44,7 +44,7 @@ namespace weatherApi.Migrations
                     b.Property<float>("Min_temperature")
                         .HasColumnType("real");
 
-                    b.Property<int>("Weater")
+                    b.Property<int>("Weather")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");

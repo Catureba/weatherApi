@@ -4,30 +4,29 @@ using System.Security.Claims;
 
 namespace weatherApi.Models
 {
-    public class WeatherModel
+    public class MeteorologicalModel
     {
         [Key]
         [Required]
         public Guid Id { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "City name is required!")]
         public string City { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Date is required!")]
         public DateTime Date { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Max temperature is required!")]
         public float Max_temperature { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Min temperature is required!")]
         public float Min_temperature { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Weather is required!")]
         [EnumDataType(typeof(WeatherType))]
         public WeatherType Weather { get; set; }
-        public WeatherModel() { }
 
-        public enum WeatherType : int
+        public enum WeatherType
         {
             [EnumMember(Value = "RAINY")]
             RAINY = 0,

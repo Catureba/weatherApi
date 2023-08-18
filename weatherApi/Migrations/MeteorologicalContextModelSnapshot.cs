@@ -2,7 +2,6 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using weatherApi.Data;
@@ -11,12 +10,10 @@ using weatherApi.Data;
 
 namespace weatherApi.Migrations
 {
-    [DbContext(typeof(WeatherContext))]
-    [Migration("20230810015736_createWeatherDatabase")]
-    partial class createWeatherDatabase
+    [DbContext(typeof(MeteorologicalContext))]
+    partial class MeteorologicalContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -25,7 +22,7 @@ namespace weatherApi.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("weatherApi.Models.WeatherModel", b =>
+            modelBuilder.Entity("weatherApi.Models.MeteorologicalModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -35,8 +32,8 @@ namespace weatherApi.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<DateOnly>("Date")
-                        .HasColumnType("date");
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<float>("Max_temperature")
                         .HasColumnType("real");
@@ -44,7 +41,7 @@ namespace weatherApi.Migrations
                     b.Property<float>("Min_temperature")
                         .HasColumnType("real");
 
-                    b.Property<int>("Weater")
+                    b.Property<int>("Weather")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");

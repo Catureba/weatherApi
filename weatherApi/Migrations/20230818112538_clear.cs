@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace weatherApi.Migrations
 {
     /// <inheritdoc />
-    public partial class createWeatherDatabase : Migration
+    public partial class clear : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -17,10 +17,10 @@ namespace weatherApi.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     City = table.Column<string>(type: "text", nullable: false),
-                    Date = table.Column<DateOnly>(type: "date", nullable: false),
+                    Date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Max_temperature = table.Column<float>(type: "real", nullable: false),
                     Min_temperature = table.Column<float>(type: "real", nullable: false),
-                    Weater = table.Column<int>(type: "integer", nullable: false)
+                    Weather = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
