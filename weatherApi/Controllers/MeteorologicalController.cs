@@ -11,12 +11,10 @@ namespace weatherApi.Controllers
     [Route("api/[Controller]/")]
     public class MeteorologicalController : ControllerBase
     {
-        private MeteorologicalContext meteorologicalContext;
         private IMeteorologicalService meteorologicalService;
         private IMapper mapper;
-        public MeteorologicalController(MeteorologicalContext Context, IMeteorologicalService meteorologicalService, IMapper mapper)
+        public MeteorologicalController(IMeteorologicalService meteorologicalService, IMapper mapper)
         {
-            meteorologicalContext = Context;
             this.meteorologicalService = meteorologicalService;
             this.mapper = mapper;
         }
@@ -60,7 +58,8 @@ namespace weatherApi.Controllers
         public IActionResult Post([FromBody] MeteorologicalDTO meteorologicalDTO)
         {
             MeteorologicalModel weather = mapper.Map<MeteorologicalModel>(meteorologicalDTO);
-            var createdResource = meteorologicalService.AddWeather(weather);
+            MeteorologicalModel? createdResource = meteorologicalService.AddMeteorologicalRegister(weather);
+
             return createdResource is null ? 
                 Conflict("Request declined: You can only have one record per day for each city.") :
                 CreatedAtAction(nameof(GetById), new { id = createdResource.Id }, createdResource);
@@ -69,15 +68,15 @@ namespace weatherApi.Controllers
         [HttpPut("edit/{id}")]
         public IActionResult Put(Guid id, [FromBody] MeteorologicalDTO meteorologicalDTO)
         {
-            MeteorologicalModel weather = mapper.Map<MeteorologicalModel>(meteorologicalDTO);
-            var response = meteorologicalService.EditWeather(id, weather);
+            MeteorologicalModel registerMeteorological = mapper.Map<MeteorologicalModel>(meteorologicalDTO);
+            var response = meteorologicalService.EditMeteorologicalRegister(id, registerMeteorological);
             return response is not null ? Ok(response) : NotFound("Meteorological Data not Found, choose another ID");
         }
 
         [HttpDelete("delete/{id}")]
         public IActionResult Delete(Guid id)
         {
-           var response = meteorologicalService.DeleteWeather(id);
+           var response = meteorologicalService.DeleteMeteorologicalRegister(id);
            return response is not null ? Ok(response) : NotFound("ID not Found, choose another ID");
         }
 

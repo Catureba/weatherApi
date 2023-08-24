@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using weatherApi.Data;
+using weatherApi.Data.Repository;
 using weatherApi.Interfaces;
 using weatherApi.Models;
 
@@ -8,35 +10,42 @@ namespace weatherApi.Services
 {
     public class MeteorologicalService : IMeteorologicalService
     {
-        private MeteorologicalContext _weatherContext;
-        public MeteorologicalService(MeteorologicalContext weatherContext) 
+        private IMeteorologicalRepository _meteorologicalRepository;
+        private IMapper _mapper;
+        public MeteorologicalService(IMeteorologicalRepository meteorologicalRepository, IMapper mapper) 
         {
-            _weatherContext = weatherContext;
+            _meteorologicalRepository = meteorologicalRepository;
+            _mapper = mapper;
         }
 
-        List<MeteorologicalModel> IMeteorologicalService.FindByCity(string city)
+        public List<MeteorologicalModel> ListAll()
+        {
+            var meteorologicalList = _meteorologicalRepository.ListAll();
+            return meteorologicalList;
+        }
+        public List<MeteorologicalModel> FindByCity(string city)
         {
             List<MeteorologicalModel> meteorologicalListByCity = new List<MeteorologicalModel>();
 
-            foreach(MeteorologicalModel weather in _weatherContext.Weathers)
+            foreach (MeteorologicalModel weather in _meteorologicalRepository.ListAll())
             {
                 if (weather.City == city) meteorologicalListByCity.Add(weather);
             }
-            
+
             return meteorologicalListByCity;
         }
 
-        MeteorologicalModel? IMeteorologicalService.FindByID(Guid id)
+        public MeteorologicalModel? FindByID(Guid id)
         {
-            var element = _weatherContext.Weathers.FirstOrDefault(x => x.Id == id);
+            var element = _meteorologicalRepository.ListAll().FirstOrDefault(x => x.Id == id);
             return element;
         }
 
-        MeteorologicalModel? IMeteorologicalService.FindByCityToday(string city)
+        public MeteorologicalModel? FindByCityToday(string city)
         {
             DateTime dateToday = DateTime.Now.Date;
 
-            foreach (MeteorologicalModel weather in _weatherContext.Weathers)
+            foreach (MeteorologicalModel weather in _meteorologicalRepository.ListAll())
             {
                 if (weather.City == city && weather.Date.Date == dateToday)
                 {
@@ -46,70 +55,54 @@ namespace weatherApi.Services
             return null;
         }
 
-        MeteorologicalModel? IMeteorologicalService.AddWeather(MeteorologicalModel weatherModel)
+        public MeteorologicalModel? AddMeteorologicalRegister(MeteorologicalModel weatherModel)
         {
-            foreach (MeteorologicalModel weather in _weatherContext.Weathers)
+            List<MeteorologicalModel> meteorologicalList = _meteorologicalRepository.ListAll();
+            foreach (MeteorologicalModel weather in meteorologicalList)
             {
                 if (weather.City == weatherModel.City && weather.Date.Date == weatherModel.Date.Date)
                 {
                     return null;
                 }
             }
-
-            _weatherContext.Weathers.Add(weatherModel);
-            _weatherContext.SaveChanges();
-            return weatherModel;
+ 
+            return _meteorologicalRepository.AddMeteorologicalRegister(weatherModel);
 
         }
 
-        MeteorologicalModel? IMeteorologicalService.DeleteWeather(Guid id)
+        public MeteorologicalModel? DeleteMeteorologicalRegister(Guid id)
         {
-            var element = _weatherContext.Weathers.FirstOrDefault(x => x.Id == id);
+            MeteorologicalModel? element = _meteorologicalRepository.ListAll().FirstOrDefault(x => x.Id == id);
 
-            if (element != null)
-            {
-                _weatherContext.Weathers.Remove(element);
-                _weatherContext.SaveChanges();
-                return element;
-            }
+            if (element != null) return _meteorologicalRepository.DeleteMeteorologicalRegister(element);
             return null;
         }
 
-        MeteorologicalModel? IMeteorologicalService.EditWeather(Guid id, MeteorologicalModel weather)
+        public MeteorologicalModel EditMeteorologicalRegister(Guid id, MeteorologicalModel meteorological)
         {
-            var old = _weatherContext.Weathers.FirstOrDefault(x => x.Id == id);
-
-            if (old != null)
-            {
-                old.City = weather.City;
-                old.Date = weather.Date;
-                old.Max_temperature = weather.Max_temperature;
-                old.Min_temperature = weather.Min_temperature;
-                old.Weather = weather.Weather;
-                _weatherContext.SaveChanges();
-                return weather;
-            }
-            return null;
+            Console.WriteLine("#########");
+            Console.WriteLine(meteorological.Id);
+            meteorological.Id = id;
+            Console.WriteLine(meteorological.Id);
+            var result = _meteorologicalRepository.EditMeteorologicalRegister(meteorological);
+            return result;
         }
 
-        List<MeteorologicalModel> IMeteorologicalService.ListAll()
-        {
-            var meteorologicalList = _weatherContext.Weathers.ToList();
-            return meteorologicalList;
-        }
+        
 
-        List<MeteorologicalModel> IMeteorologicalService.ListNextSeven(string city)
+        public List<MeteorologicalModel> ListNextSeven(string city)
         {
 
             List<MeteorologicalModel> meteorologicalListByCity = new List<MeteorologicalModel>();
 
-            foreach (MeteorologicalModel weather in _weatherContext.Weathers)
+            foreach (MeteorologicalModel weather in _meteorologicalRepository.ListAll())
             {
-                DateTime dateTime = DateTime.Now;
+                DateTime dateTime = DateTime.Now.Date;
                 DateTime dateNext7days = dateTime.AddDays(7);
+
                 if (weather.City == city)
                 {
-                    if (weather.Date > dateTime && weather.Date < dateNext7days)
+                    if (weather.Date.Date > dateTime && weather.Date.Date <= dateNext7days)
                     {
                         meteorologicalListByCity.Add(weather);
                     }

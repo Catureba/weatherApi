@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using weatherApi.Data;
@@ -11,9 +12,11 @@ using weatherApi.Data;
 namespace weatherApi.Migrations
 {
     [DbContext(typeof(MeteorologicalContext))]
-    partial class MeteorologicalContextModelSnapshot : ModelSnapshot
+    [Migration("20230821133445_convert-enum-type-int-to-string")]
+    partial class convertenumtypeinttostring
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

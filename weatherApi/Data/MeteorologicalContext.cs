@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using weatherApi.Models;
+using static weatherApi.Models.MeteorologicalModel;
 
 namespace weatherApi.Data
 {
