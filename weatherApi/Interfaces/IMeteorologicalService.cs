@@ -6,11 +6,11 @@ namespace weatherApi.Interfaces
     {
         List<MeteorologicalModel> ListAll();
         List<MeteorologicalModel> ListNextSeven(string city);
-        MeteorologicalModel FindByID(Guid id);
+        MeteorologicalModel? FindByID(Guid id);
         List<MeteorologicalModel> FindByCity(string city);
-        MeteorologicalModel FindByCityToday(string city);
-        MeteorologicalModel AddMeteorologicalRegister(MeteorologicalModel meteorological);
-        MeteorologicalModel EditMeteorologicalRegister(Guid id, MeteorologicalModel meteorological);
-        MeteorologicalModel DeleteMeteorologicalRegister(Guid id);
+        MeteorologicalModel? FindByCityToday(string city);
+        Guid? AddMeteorologicalRegister(MeteorologicalModel meteorological);
+        void EditMeteorologicalRegister(Guid id, MeteorologicalModel meteorological);
+        void DeleteMeteorologicalRegister(Guid id);
     }
 }
