@@ -3,6 +3,7 @@ using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using weatherApi.Data;
@@ -27,44 +28,98 @@ namespace WeatherApi.Tests.Services
         }
         
 
-        private MeteorologicalModel meteorologicalModel1 = new MeteorologicalModel()
+        private MeteorologicalModel meteorologicalModel1 = new MeteorologicalModel
         {
             Id = Guid.NewGuid(),
-            City = "Salvador",
+            City = "salvador",
             Date = DateTime.Now,
             Max_temperature = 10,
             Min_temperature = 10,
             Weather = MeteorologicalModel.WeatherType.SUNNY
         };
 
-        private MeteorologicalModel meteorologicalModel2 = new MeteorologicalModel()
+        private MeteorologicalModel meteorologicalModel2 = new MeteorologicalModel
         {
             Id = Guid.NewGuid(),
-            City = "Porto Alegre",
+            City = "porto alegre",
             Date = DateTime.Now,
             Max_temperature = 15,
             Min_temperature = 15,
             Weather = MeteorologicalModel.WeatherType.SHAKESPEARE
         };
 
-        private MeteorologicalDTO meteorologicalDTO = new MeteorologicalDTO()
+
+        private MeteorologicalDTO meteorologicalDTO = new MeteorologicalDTO
         {
-            City = "SalvadorDTO",
+            City = "salvadordto",
             Date = DateTime.Now,
             Max_temperature = 20,
             Min_temperature = 20,
-            Weather = (MeteorologicalDTO.WeatherType)MeteorologicalModel.WeatherType.TROPICAIS
+            Weather = (MeteorologicalDTO.WeatherType)MeteorologicalModel.WeatherType.RAINY
         };
 
         
 
         [Fact]
-        public void postMeteorologicalTest()
+        public void successfulPostMeteorologicalTest()
         {
-            MeteorologicalModel result = _meteorologicalService.AddMeteorologicalRegister(meteorologicalModel1);
-            
+            //ARRANGE:
+            List<MeteorologicalModel> meteorologicalListByCity = new List<MeteorologicalModel>();
+            meteorologicalListByCity.Add(meteorologicalModel2);
+            _meteorologicalRepository.Setup(repository => (repository.FindByCity(meteorologicalModel1.City))).Returns(meteorologicalListByCity);
+            _meteorologicalRepository.Setup(repository => (repository.AddMeteorologicalRegister(meteorologicalModel1))).Returns(meteorologicalModel1);
+
+            //ACT:
+            MeteorologicalModel? result = _meteorologicalService.AddMeteorologicalRegister(meteorologicalModel1);
+
+            //ASSERT:
             Assert.NotNull(result);
             Assert.Equal(meteorologicalModel1, result);
+        }
+
+        [Fact]
+        public void badPostMeteorologicalTest()
+        {
+            //ARRANGE:
+            List<MeteorologicalModel> meteorologicalListByCity = new List<MeteorologicalModel>();
+            meteorologicalListByCity.Add(meteorologicalModel1);
+            _meteorologicalRepository.Setup(repository => (repository.FindByCity(meteorologicalModel1.City))).Returns(meteorologicalListByCity);
+            _meteorologicalRepository.Setup(repository => (repository.AddMeteorologicalRegister(meteorologicalModel1))).Returns(meteorologicalModel1);
+
+            //ACT:
+            MeteorologicalModel? result = _meteorologicalService.AddMeteorologicalRegister(meteorologicalModel1);
+
+            //ASSERT:
+            Assert.Null(result);
+        }
+
+        [Fact]
+        public void editMeteorologicalTest()
+        {
+            //ARRANGE:
+            MeteorologicalModel meteorologicalDataEdited = new MeteorologicalModel
+            {
+                Id = meteorologicalModel1.Id,
+                City = meteorologicalModel2.City,
+                Date = meteorologicalModel2.Date,
+                Max_temperature = meteorologicalModel2.Max_temperature,
+                Min_temperature = meteorologicalModel2.Min_temperature,
+                Weather = meteorologicalModel2.Weather
+            };
+            _meteorologicalRepository.Setup(repository => (repository.FindByID(meteorologicalModel1.Id))).Returns(meteorologicalModel1);
+            _meteorologicalRepository.Setup(repository => (repository.EditMeteorologicalRegister(meteorologicalModel2))).Returns(meteorologicalDataEdited);
+
+
+            //ACT:
+            MeteorologicalModel? result = _meteorologicalService.EditMeteorologicalRegister(meteorologicalModel1.Id, meteorologicalModel2);
+
+            //ASSERT:
+            Assert.NotNull(result);
+            Assert.Equal(meteorologicalDataEdited.City, result.City);
+            Assert.Equal(meteorologicalDataEdited.Date, result.Date);
+            Assert.Equal(meteorologicalDataEdited.Id, result.Id);
+            Assert.Equal(meteorologicalDataEdited.Max_temperature, result.Max_temperature);
+            Assert.Equal(meteorologicalDataEdited.Min_temperature, result.Min_temperature);
         }
 
         [Fact]
