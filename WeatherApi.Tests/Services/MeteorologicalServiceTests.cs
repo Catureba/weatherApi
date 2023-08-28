@@ -20,11 +20,13 @@ namespace WeatherApi.Tests.Services
     {
         private MeteorologicalService _meteorologicalService;
         private Mock<IMeteorologicalRepository> _meteorologicalRepository;
+        private Mock<IMapper> _mapper;
 
         public MeteorologicalServiceTests()
         {
             _meteorologicalRepository = new Mock<IMeteorologicalRepository>();
-            _meteorologicalService = new MeteorologicalService(_meteorologicalRepository.Object);
+            _mapper = new Mock<IMapper>();
+            _meteorologicalService = new MeteorologicalService(_meteorologicalRepository.Object, _mapper.Object);
         }
         
 
@@ -129,7 +131,7 @@ namespace WeatherApi.Tests.Services
             listMeteorological.Add(meteorologicalModel1);
             listMeteorological.Add(meteorologicalModel2);
 
-            _meteorologicalRepository.Setup(r => (r.ListAll())).Returns(listMeteorological);
+            _meteorologicalRepository.Setup(repository => (repository.ListAll())).Returns(listMeteorological);
 
             List<MeteorologicalModel> result = _meteorologicalService.ListAll();
 
