@@ -9,8 +9,8 @@ namespace weatherApi.Data.Repository
         MeteorologicalModel? FindByID(Guid id);
         List<MeteorologicalModel> FindByCity(string city);
         MeteorologicalModel? FindByCityToday(string city);
-        Guid AddMeteorologicalRegister(MeteorologicalModel meteorological);
-        void EditMeteorologicalRegister(MeteorologicalModel meteorological);
+        MeteorologicalModel? AddMeteorologicalRegister(MeteorologicalModel meteorological);
+        MeteorologicalModel? EditMeteorologicalRegister(MeteorologicalModel meteorological);
         void DeleteMeteorologicalRegister(MeteorologicalModel meteorological);
     }
 }
