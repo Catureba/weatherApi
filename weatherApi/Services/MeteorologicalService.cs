@@ -42,26 +42,33 @@ namespace weatherApi.Services
         {
              return _meteorologicalRepository.ListAll().FirstOrDefault(x => x.Id == id);
         }
-        public Guid? AddMeteorologicalRegister(MeteorologicalModel meteorologicalModel)
+        public MeteorologicalModel? AddMeteorologicalRegister(MeteorologicalModel meteorologicalModel)
         {
             meteorologicalModel.City = meteorologicalModel.City.ToLower();
-            List<MeteorologicalModel> meteorologicalListByCity = _meteorologicalRepository.FindByCity(meteorologicalModel.City);
-            meteorologicalListByCity = meteorologicalListByCity.Where(x => x.Date.Date == meteorologicalModel.Date.Date).ToList();
-            if (meteorologicalListByCity.Any()) throw new Exception("Request declined: You can only have one record per day for each city.");
+            if(!ValidateExistMeteorologicalRegister(meteorologicalModel)) return null;
             return _meteorologicalRepository.AddMeteorologicalRegister(meteorologicalModel);
         }
-        public void EditMeteorologicalRegister(Guid id, MeteorologicalModel meteorological)
+        public MeteorologicalModel? EditMeteorologicalRegister(Guid id, MeteorologicalModel meteorological)
         {
             MeteorologicalModel? idExist = _meteorologicalRepository.FindByID(id);
-            if (idExist == null) throw new Exception("Registro não encontrado");
+            if (idExist == null) return null; //throw new Exception("Registro não encontrado");
             meteorological.Id = id;
             _meteorologicalRepository.EditMeteorologicalRegister(meteorological);
+
+            return meteorological;
         }
         public void DeleteMeteorologicalRegister(Guid id)
         {
             MeteorologicalModel? meteorological = _meteorologicalRepository.FindByID(id);
             if (meteorological == null) throw new Exception("Registro não encontrado");
             _meteorologicalRepository.DeleteMeteorologicalRegister(meteorological);
+        }
+
+        public Boolean ValidateExistMeteorologicalRegister(MeteorologicalModel meteorological) 
+        {
+            List<MeteorologicalModel> meteorologicalListByCity = _meteorologicalRepository.FindByCity(meteorological.City);
+            if (meteorologicalListByCity != null) return meteorologicalListByCity.Any(x => x.Date.Date == meteorological.Date.Date);
+            return true;
         }
     }
 }

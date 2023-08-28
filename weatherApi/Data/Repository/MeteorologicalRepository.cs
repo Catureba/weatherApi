@@ -50,18 +50,24 @@ namespace weatherApi.Data.Repository
             foreach (MeteorologicalModel weather in meteorologicalModelsByCity) if (weather.Date.Date == dateToday) return weather;
             return null;
         }
-        public Guid AddMeteorologicalRegister(MeteorologicalModel meteorologicalModel)
+        public MeteorologicalModel? AddMeteorologicalRegister(MeteorologicalModel meteorologicalModel)
         {
             var responseEntity = _context.Weathers.Add(meteorologicalModel);
             MeteorologicalModel response = _mapper.Map<MeteorologicalModel>(responseEntity.Entity);
             _context.SaveChanges();
 
-            return response.Id;
+            return response;
         }
-        public void EditMeteorologicalRegister(MeteorologicalModel meteorological)
+        public MeteorologicalModel? EditMeteorologicalRegister(MeteorologicalModel meteorological)
         {
-            _context.Weathers.Update(meteorological);
-            _context.SaveChanges();
+            var byEdit = _context.Weathers.FirstOrDefault(x => x.Id == meteorological.Id);
+            if(byEdit != null)
+            {
+                var saved = _context.Weathers.Update(byEdit);
+                _context.SaveChanges();
+                return _mapper.Map<MeteorologicalModel>(saved.Entity);
+            }
+            return null;
         }
 
         public void DeleteMeteorologicalRegister(MeteorologicalModel meteorological)

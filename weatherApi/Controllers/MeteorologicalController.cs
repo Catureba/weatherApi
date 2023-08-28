@@ -59,11 +59,11 @@ namespace weatherApi.Controllers
         public IActionResult Post([FromBody] MeteorologicalDTO meteorologicalDTO)
         {
             MeteorologicalModel weather = mapper.Map<MeteorologicalModel>(meteorologicalDTO);
-            Guid? idCreatedResource = meteorologicalService.AddMeteorologicalRegister(weather);
+            MeteorologicalModel? idCreatedResource = meteorologicalService.AddMeteorologicalRegister(weather);
 
             return idCreatedResource is null ? 
                 Conflict("Request declined: You can only have one record per day for each city.") :
-                CreatedAtAction(nameof(GetById), new { id = idCreatedResource }, idCreatedResource);
+                CreatedAtAction(nameof(GetById), new { id = idCreatedResource.Id }, idCreatedResource);
         }
 
         [HttpPut("editRegisterMeteorologicalById/{id}")]
