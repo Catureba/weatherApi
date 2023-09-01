@@ -67,7 +67,7 @@ namespace weatherApi.Services
         public Boolean ValidateExistMeteorologicalRegister(MeteorologicalModel meteorological) 
         {
             List<MeteorologicalModel> meteorologicalListByCity = _meteorologicalRepository.FindByCity(meteorological.City);
-            if (meteorologicalListByCity != null) return meteorologicalListByCity.Any(x => x.Date.Date == meteorological.Date.Date);
+            if (meteorologicalListByCity != null) return !meteorologicalListByCity.Any(x => x.Date.Date == meteorological.Date.Date);
             return true;
         }
     }

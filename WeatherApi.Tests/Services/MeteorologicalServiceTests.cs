@@ -28,13 +28,13 @@ namespace WeatherApi.Tests.Services
             _mapper = new Mock<IMapper>();
             _meteorologicalService = new MeteorologicalService(_meteorologicalRepository.Object, _mapper.Object);
         }
-        
+
 
         private MeteorologicalModel meteorologicalModel1 = new MeteorologicalModel
         {
             Id = Guid.NewGuid(),
             City = "salvador",
-            Date = DateTime.Now,
+            Date = new DateTime(2022, 12, 30),
             Max_temperature = 10,
             Min_temperature = 10,
             Weather = MeteorologicalModel.WeatherType.SUNNY
@@ -44,7 +44,7 @@ namespace WeatherApi.Tests.Services
         {
             Id = Guid.NewGuid(),
             City = "porto alegre",
-            Date = DateTime.Now,
+            Date = new DateTime(2022, 12, 30),
             Max_temperature = 15,
             Min_temperature = 15,
             Weather = MeteorologicalModel.WeatherType.SHAKESPEARE
@@ -54,29 +54,48 @@ namespace WeatherApi.Tests.Services
         private MeteorologicalDTO meteorologicalDTO = new MeteorologicalDTO
         {
             City = "salvadordto",
-            Date = DateTime.Now,
+            Date = new DateTime(2022, 12, 30),
             Max_temperature = 20,
             Min_temperature = 20,
             Weather = (MeteorologicalDTO.WeatherType)MeteorologicalModel.WeatherType.RAINY
         };
 
-        
 
         [Fact]
         public void successfulPostMeteorologicalTest()
         {
             //ARRANGE:
+            MeteorologicalModel meteorologicalPost = new MeteorologicalModel
+            {
+                Id = Guid.NewGuid(),
+                City = "salvador",
+                Date = new DateTime(2022,12,30), 
+                Max_temperature = 33,
+                Min_temperature = 32,
+                Weather = MeteorologicalModel.WeatherType.SUNNY
+            };
+
+            MeteorologicalModel meteorologicalOtherCity = new MeteorologicalModel
+            {
+                Id = Guid.NewGuid(),
+                City = "salvador",
+                Date = new DateTime(2023,1,1),
+                Max_temperature = 22,
+                Min_temperature = 11,
+                Weather = MeteorologicalModel.WeatherType.TROPICAIS
+            };
+
             List<MeteorologicalModel> meteorologicalListByCity = new List<MeteorologicalModel>();
-            meteorologicalListByCity.Add(meteorologicalModel2);
-            _meteorologicalRepository.Setup(repository => (repository.FindByCity(meteorologicalModel1.City))).Returns(meteorologicalListByCity);
-            _meteorologicalRepository.Setup(repository => (repository.AddMeteorologicalRegister(meteorologicalModel1))).Returns(meteorologicalModel1);
+            meteorologicalListByCity.Add(meteorologicalOtherCity);
+            _meteorologicalRepository.Setup(repository => (repository.FindByCity(meteorologicalPost.City))).Returns(meteorologicalListByCity);
+            _meteorologicalRepository.Setup(repository => (repository.AddMeteorologicalRegister(meteorologicalPost))).Returns(meteorologicalPost);
 
             //ACT:
-            MeteorologicalModel? result = _meteorologicalService.AddMeteorologicalRegister(meteorologicalModel1);
+            MeteorologicalModel? result = _meteorologicalService.AddMeteorologicalRegister(meteorologicalPost);
 
             //ASSERT:
             Assert.NotNull(result);
-            Assert.Equal(meteorologicalModel1, result);
+            Assert.Equal(meteorologicalPost, result);
         }
 
         [Fact]
@@ -137,6 +156,35 @@ namespace WeatherApi.Tests.Services
 
             Assert.NotNull(result);
             Assert.Equal(listMeteorological, result);
+        }
+
+        [Fact]
+        public void getSevenNextDaysMeteorologicalTest()
+        {
+            //ARRANGE
+            List<MeteorologicalModel> listByCity = new List<MeteorologicalModel>();
+            MeteorologicalModel meteorologicalRegister = new MeteorologicalModel
+            {
+                Id = Guid.NewGuid(),
+                City = "candeias",
+                Date = DateTime.Now,
+                Max_temperature = 44,
+                Min_temperature = 37,
+                Weather = MeteorologicalModel.WeatherType.SUNNY
+            };
+
+            for (int i = 0; i < 7; i++)
+            {
+                meteorologicalRegister.Date = meteorologicalRegister.Date.AddDays(1);
+                listByCity.Add(meteorologicalRegister);
+            }
+            _meteorologicalRepository.Setup(repository => (repository.ListNextSeven("candeias"))).Returns(listByCity);
+            //ACT
+            var result = _meteorologicalService.ListNextSeven("candeias");
+
+            //ASSERT
+            Assert.NotNull(result);
+            Assert.Equal(listByCity, result);
         }
     }
 }

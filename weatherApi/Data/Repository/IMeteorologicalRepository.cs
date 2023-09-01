@@ -12,6 +12,5 @@ namespace weatherApi.Data.Repository
         MeteorologicalModel? AddMeteorologicalRegister(MeteorologicalModel meteorological);
         MeteorologicalModel? EditMeteorologicalRegister(MeteorologicalModel meteorological);
         void DeleteMeteorologicalRegister(MeteorologicalModel meteorological);
-        Boolean ValidateExistMeteorologicalRegister(MeteorologicalModel meteorological);
     }
 }
