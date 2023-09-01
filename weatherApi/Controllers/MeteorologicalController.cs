@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Win32;
 using weatherApi.Data;
 using weatherApi.DTOs;
 using weatherApi.Interfaces;
@@ -26,58 +27,58 @@ namespace weatherApi.Controllers
             return meteorologicalList.Any() ? Ok(meteorologicalList) : NotFound("Meteorological Data not Found");
         }
 
-        [HttpGet("FindToday/{city}")]
-        public IActionResult GetRegisterToday(string city)
-        {
-            var response = meteorologicalService.FindByCityToday(city);
-            return response is null ? NotFound("Meteorological Data not Found, choose another city") : Ok(response);
-        }
-
-        [HttpGet("id/{id}")]
-        public IActionResult GetById(Guid id)
-        {
-            var response = meteorologicalService.FindByID(id);
-            return response is null ? NotFound("Meteorological Data not Found") : Ok(response);
-        }
-
-        [HttpGet("city/{city}")]
-        public IActionResult GetAllByCity(string city)
-        {
-            IEnumerable<MeteorologicalModel> response = meteorologicalService.FindByCity(city);
-            return response.Any() ? Ok(response) : NotFound("Meteorological Data not Found, choose another city");
-        }
-
-        [HttpGet("next7/{city}")]
+        [HttpGet("listNextSevenDaysByCity/{city}")]
         public IActionResult GetNextSevenDaysByCity(string city)
         {
             IEnumerable<MeteorologicalModel> response = meteorologicalService.ListNextSeven(city);
             return response.Any() ? Ok(response) : NotFound("Meteorological Data not Found, choose another city");
         }
 
-        [HttpPost("post/")]
+        [HttpGet("getById/{id}")]
+        public IActionResult GetById(Guid id)
+        {
+            var response = meteorologicalService.FindByID(id);
+            return response is null ? NotFound("Meteorological Data not Found") : Ok(response);
+        }
+
+        [HttpGet("listByCity/{city}")]
+        public IActionResult GetAllByCity(string city)
+        {
+            IEnumerable<MeteorologicalModel> response = meteorologicalService.FindByCity(city);
+            return response.Any() ? Ok(response) : NotFound("Meteorological Data not Found, choose another city");
+        }
+
+        [HttpGet("getRegisterByCityToday/{city}")]
+        public IActionResult GetRegisterToday(string city)
+        {
+            var response = meteorologicalService.FindByCityToday(city);
+            return response is null ? NotFound("Meteorological Data not Found, choose another city") : Ok(response);
+        }
+
+        [HttpPost("postRegisterMeteorological/")]
         public IActionResult Post([FromBody] MeteorologicalDTO meteorologicalDTO)
         {
             MeteorologicalModel weather = mapper.Map<MeteorologicalModel>(meteorologicalDTO);
-            MeteorologicalModel? createdResource = meteorologicalService.AddMeteorologicalRegister(weather);
+            MeteorologicalModel? idCreatedResource = meteorologicalService.AddMeteorologicalRegister(weather);
 
-            return createdResource is null ? 
+            return idCreatedResource is null ? 
                 Conflict("Request declined: You can only have one record per day for each city.") :
-                CreatedAtAction(nameof(GetById), new { id = createdResource.Id }, createdResource);
+                CreatedAtAction(nameof(GetById), new { id = idCreatedResource.Id }, idCreatedResource);
         }
 
-        [HttpPut("edit/{id}")]
+        [HttpPut("editRegisterMeteorologicalById/{id}")]
         public IActionResult Put(Guid id, [FromBody] MeteorologicalDTO meteorologicalDTO)
         {
             MeteorologicalModel registerMeteorological = mapper.Map<MeteorologicalModel>(meteorologicalDTO);
-            var response = meteorologicalService.EditMeteorologicalRegister(id, registerMeteorological);
-            return response is not null ? Ok(response) : NotFound("Meteorological Data not Found, choose another ID");
+            meteorologicalService.EditMeteorologicalRegister(id, registerMeteorological);
+            return Ok("Edited the Meteorological register!");
         }
 
-        [HttpDelete("delete/{id}")]
+        [HttpDelete("deleteRegisterMeteorologicalById/{id}")]
         public IActionResult Delete(Guid id)
         {
-           var response = meteorologicalService.DeleteMeteorologicalRegister(id);
-           return response is not null ? Ok(response) : NotFound("ID not Found, choose another ID");
+           meteorologicalService.DeleteMeteorologicalRegister(id);
+           return Ok("Deleted the Meteorological register!");
         }
 
     }
