@@ -12,8 +12,8 @@ using weatherApi.Data;
 namespace weatherApi.Migrations
 {
     [DbContext(typeof(MeteorologicalContext))]
-    [Migration("20230821133445_convert-enum-type-int-to-string")]
-    partial class convertenumtypeinttostring
+    [Migration("20230919151809_refactor_entity")]
+    partial class refactor_entity
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -38,13 +38,28 @@ namespace weatherApi.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("Humidity")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<float>("Max_temperature")
                         .HasColumnType("real");
 
                     b.Property<float>("Min_temperature")
                         .HasColumnType("real");
 
-                    b.Property<string>("Weather")
+                    b.Property<float>("Precipitation")
+                        .HasColumnType("real");
+
+                    b.Property<string>("Weather_day")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Weather_night")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Wind_speed")
                         .IsRequired()
                         .HasColumnType("text");
 

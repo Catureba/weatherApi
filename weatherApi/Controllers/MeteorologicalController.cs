@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Win32;
 using weatherApi.Data;
@@ -10,6 +11,7 @@ namespace weatherApi.Controllers
 {
     [ApiController]
     [Route("api/[Controller]/")]
+    [EnableCors("WeatherFront")]
     public class MeteorologicalController : ControllerBase
     {
         private IMeteorologicalService meteorologicalService;
