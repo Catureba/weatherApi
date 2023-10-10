@@ -32,10 +32,10 @@ namespace weatherApi.Models
         public float Precipitation { get; set; }
 
         [Required(ErrorMessage = "Humidity is required!")]
-        public string Humidity { get; set; }
+        public float Humidity { get; set; }
 
         [Required(ErrorMessage = "Wind speed is required!")]
-        public string Wind_speed { get; set; }
+        public float Wind_speed { get; set; }
 
         //[Required(ErrorMessage = "Weather is required!")]
         //[EnumDataType(typeof(WeatherType))]

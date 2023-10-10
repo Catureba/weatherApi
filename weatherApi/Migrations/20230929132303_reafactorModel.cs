@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace weatherApi.Migrations
 {
     /// <inheritdoc />
-    public partial class refactor_entity : Migration
+    public partial class reafactorModel : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -23,8 +23,8 @@ namespace weatherApi.Migrations
                     Weather_day = table.Column<string>(type: "text", nullable: false),
                     Weather_night = table.Column<string>(type: "text", nullable: false),
                     Precipitation = table.Column<float>(type: "real", nullable: false),
-                    Humidity = table.Column<string>(type: "text", nullable: false),
-                    Wind_speed = table.Column<string>(type: "text", nullable: false)
+                    Humidity = table.Column<string>(type: "real", nullable: false),
+                    Wind_speed = table.Column<string>(type: "real", nullable: false)
                 },
                 constraints: table =>
                 {

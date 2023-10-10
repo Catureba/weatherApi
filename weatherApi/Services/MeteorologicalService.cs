@@ -53,6 +53,7 @@ namespace weatherApi.Services
             MeteorologicalModel? idExist = _meteorologicalRepository.FindByID(id);
             if (idExist == null) return null; //throw new Exception("Registro não encontrado");
             meteorological.Id = id;
+            meteorological.City = meteorological.City.ToLower();
             _meteorologicalRepository.EditMeteorologicalRegister(meteorological);
 
             return meteorological;

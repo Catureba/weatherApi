@@ -12,8 +12,8 @@ using weatherApi.Data;
 namespace weatherApi.Migrations
 {
     [DbContext(typeof(MeteorologicalContext))]
-    [Migration("20230919151809_refactor_entity")]
-    partial class refactor_entity
+    [Migration("20230929132303_reafactorModel")]
+    partial class reafactorModel
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

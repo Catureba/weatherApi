@@ -37,7 +37,7 @@ namespace weatherApi.Migrations
 
                     b.Property<string>("Humidity")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("real");
 
                     b.Property<float>("Max_temperature")
                         .HasColumnType("real");
@@ -58,7 +58,7 @@ namespace weatherApi.Migrations
 
                     b.Property<string>("Wind_speed")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("real");
 
                     b.HasKey("Id");
 

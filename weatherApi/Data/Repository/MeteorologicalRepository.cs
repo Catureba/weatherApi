@@ -25,7 +25,7 @@ namespace weatherApi.Data.Repository
             DateTime dateToday = DateTime.Now.Date;
             DateTime todayMoreSevenDays = dateToday.AddDays(7);
             var listByCity = new List<MeteorologicalModel>();
-            foreach (MeteorologicalModel meteorological in FindByCity(city))
+            foreach (MeteorologicalModel meteorological in FindByCity(city.ToLower()))
             {
                 if (meteorological.Date.Date > dateToday && meteorological.Date.Date <= todayMoreSevenDays)
                 {
@@ -40,13 +40,13 @@ namespace weatherApi.Data.Repository
         }
         public List<MeteorologicalModel> FindByCity(string city)
         {
-            var response = _context.Weathers.Where(x => x.City == city);
+            var response = _context.Weathers.Where(x => x.City == city.ToLower());
             return response.ToList();
         }
         public MeteorologicalModel? FindByCityToday(string city)
         {
             DateTime dateToday = DateTime.Now.Date;
-            var meteorologicalModelsByCity = _context.Weathers.Where(x => x.City == city);
+            var meteorologicalModelsByCity = _context.Weathers.Where(x => x.City == city.ToLower());
             foreach (MeteorologicalModel weather in meteorologicalModelsByCity) if (weather.Date.Date == dateToday) return weather;
             return null;
         }
