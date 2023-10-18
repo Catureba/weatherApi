@@ -24,27 +24,27 @@ namespace weatherApi.Services
             int pageSize = 5;
             if(city == "")
             {
-                var meteorologicalList = _meteorologicalRepository.ListWithPagination(skip * pageSize);
+                var meteorologicalList = _meteorologicalRepository.ListAll();
 
                 MeteorologicalList allRegisters = new MeteorologicalList
                 {
-                    data = meteorologicalList,
+                    data = meteorologicalList.Skip(skip * pageSize).Take(5).ToList(),
                     totalRegisters = meteorologicalList.Count,
-                    totalPages = meteorologicalList.Count % 5 + 1,
-                    atualPage = skip,
+                    totalPages = (meteorologicalList.Count + 5 - 1) / 5,
+                    currentPage = skip,
                 };
                 return allRegisters;
             }
             else
             {
-                var meteorologicalList = _meteorologicalRepository.FindByCityWithPagination(city, skip * pageSize);
+                var meteorologicalList = _meteorologicalRepository.FindByCity(city);
 
                 MeteorologicalList allRegisters = new MeteorologicalList
                 {
-                    data = meteorologicalList,
+                    data = meteorologicalList.Skip(skip * pageSize).Take(5).ToList(),
                     totalRegisters = meteorologicalList.Count,
-                    totalPages = meteorologicalList.Count % 5 + 1,
-                    atualPage = skip,
+                    totalPages = (meteorologicalList.Count + 5 - 1) / 5,
+                    currentPage = skip,
                 };
                 return allRegisters;
             }
