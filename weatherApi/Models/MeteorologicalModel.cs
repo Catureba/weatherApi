@@ -22,23 +22,38 @@ namespace weatherApi.Models
         [Required(ErrorMessage = "Min temperature is required!")]
         public float Min_temperature { get; set; }
 
-        [Required(ErrorMessage = "Weather is required!")]
-        [EnumDataType(typeof(WeatherType))]
-        public WeatherType Weather { get; set; }
+        [Required(ErrorMessage ="Weather day is required!")]
+        public string Weather_day { get; set; }
 
-        public enum WeatherType
-        {
-            [EnumMember(Value = "RAINY")]
-            RAINY = 0,
-            [EnumMember(Value = "SUNNY")]
-            SUNNY = 1,
-            [EnumMember(Value = "OVERCAST")]
-            OVERCAST = 2,
-            [EnumMember(Value = "TROPICAIS")]
-            TROPICAIS = 3,
-            [EnumMember(Value = "SHAKESPEARE")]
-            SHAKESPEARE = 4,
-        }
+        [Required(ErrorMessage = "Weather night is required!")]
+        public string Weather_night { get; set; }
+
+        [Required(ErrorMessage = "Precipitation is required!")]
+        public float Precipitation { get; set; }
+
+        [Required(ErrorMessage = "Humidity is required!")]
+        public float Humidity { get; set; }
+
+        [Required(ErrorMessage = "Wind speed is required!")]
+        public float Wind_speed { get; set; }
+
+        //[Required(ErrorMessage = "Weather is required!")]
+        //[EnumDataType(typeof(WeatherType))]
+        //public WeatherType Weather { get; set; }
+
+        //public enum WeatherType
+        //{
+        //    [EnumMember(Value = "RAINY")]
+        //    RAINY = 0,
+        //    [EnumMember(Value = "SUNNY")]
+        //    SUNNY = 1,
+        //    [EnumMember(Value = "OVERCAST")]
+        //    OVERCAST = 2,
+        //    [EnumMember(Value = "TROPICAIS")]
+        //    TROPICAIS = 3,
+        //    [EnumMember(Value = "SHAKESPEARE")]
+        //    SHAKESPEARE = 4,
+        //}
 
     }
 }

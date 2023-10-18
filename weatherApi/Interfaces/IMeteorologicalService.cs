@@ -4,6 +4,7 @@ namespace weatherApi.Interfaces
 {
     public interface IMeteorologicalService
     {
+        MeteorologicalList ListWithPagination(int skip, string city);
         List<MeteorologicalModel> ListAll();
         List<MeteorologicalModel> ListNextSeven(string city);
         MeteorologicalModel? FindByID(Guid id);

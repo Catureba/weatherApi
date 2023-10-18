@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Win32;
 using weatherApi.Data;
@@ -10,6 +11,7 @@ namespace weatherApi.Controllers
 {
     [ApiController]
     [Route("api/[Controller]/")]
+    [EnableCors("WeatherFront")]
     public class MeteorologicalController : ControllerBase
     {
         private IMeteorologicalService meteorologicalService;
@@ -20,10 +22,19 @@ namespace weatherApi.Controllers
             this.mapper = mapper;
         }
 
+
+        [HttpGet("listRegisters")]
+        public IActionResult ListAllRegisters(string? city = "", int skip = 0)
+        {
+            var allRegisters = meteorologicalService.ListWithPagination(skip, city);
+            return allRegisters.data.Any() ? Ok(allRegisters) : NotFound("Meteorological Data not Found");
+        }
+
+
         [HttpGet("FindAll")]
         public IActionResult GetAllRegisters()
         {
-            IEnumerable<MeteorologicalModel> meteorologicalList = meteorologicalService.ListAll();
+            var meteorologicalList = meteorologicalService.ListAll();
             return meteorologicalList.Any() ? Ok(meteorologicalList) : NotFound("Meteorological Data not Found");
         }
 
@@ -44,7 +55,7 @@ namespace weatherApi.Controllers
         [HttpGet("listByCity/{city}")]
         public IActionResult GetAllByCity(string city)
         {
-            IEnumerable<MeteorologicalModel> response = meteorologicalService.FindByCity(city);
+            var response = meteorologicalService.FindByCity(city);
             return response.Any() ? Ok(response) : NotFound("Meteorological Data not Found, choose another city");
         }
 
@@ -70,8 +81,10 @@ namespace weatherApi.Controllers
         public IActionResult Put(Guid id, [FromBody] MeteorologicalDTO meteorologicalDTO)
         {
             MeteorologicalModel registerMeteorological = mapper.Map<MeteorologicalModel>(meteorologicalDTO);
-            meteorologicalService.EditMeteorologicalRegister(id, registerMeteorological);
-            return Ok("Edited the Meteorological register!");
+            var response = meteorologicalService.EditMeteorologicalRegister(id, registerMeteorological);
+            return response is null? 
+                NotFound():
+                Ok(response);
         }
 
         [HttpDelete("deleteRegisterMeteorologicalById/{id}")]

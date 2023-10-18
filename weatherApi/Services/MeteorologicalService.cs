@@ -19,6 +19,37 @@ namespace weatherApi.Services
             _mapper = mapper;
         }
 
+        public MeteorologicalList ListWithPagination(int skip, string city = "")
+        {
+            int pageSize = 5;
+            if(city == "")
+            {
+                var meteorologicalList = _meteorologicalRepository.ListWithPagination(skip * pageSize);
+
+                MeteorologicalList allRegisters = new MeteorologicalList
+                {
+                    data = meteorologicalList,
+                    totalRegisters = meteorologicalList.Count,
+                    totalPages = meteorologicalList.Count % 5 + 1,
+                    atualPage = skip,
+                };
+                return allRegisters;
+            }
+            else
+            {
+                var meteorologicalList = _meteorologicalRepository.FindByCityWithPagination(city, skip * pageSize);
+
+                MeteorologicalList allRegisters = new MeteorologicalList
+                {
+                    data = meteorologicalList,
+                    totalRegisters = meteorologicalList.Count,
+                    totalPages = meteorologicalList.Count % 5 + 1,
+                    atualPage = skip,
+                };
+                return allRegisters;
+            }
+            
+        }
         public List<MeteorologicalModel> ListAll()
         {
             var meteorologicalList = _meteorologicalRepository.ListAll();
@@ -53,9 +84,10 @@ namespace weatherApi.Services
             MeteorologicalModel? idExist = _meteorologicalRepository.FindByID(id);
             if (idExist == null) return null; //throw new Exception("Registro não encontrado");
             meteorological.Id = id;
-            _meteorologicalRepository.EditMeteorologicalRegister(meteorological);
+            meteorological.City = meteorological.City.ToLower();
+            var result = _meteorologicalRepository.EditMeteorologicalRegister(meteorological);
 
-            return meteorological;
+            return result;
         }
         public void DeleteMeteorologicalRegister(Guid id)
         {

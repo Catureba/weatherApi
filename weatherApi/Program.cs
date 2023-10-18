@@ -10,6 +10,15 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<MeteorologicalContext>(opts => opts.UseNpgsql(builder.Configuration.GetConnectionString("WeatherConection")));
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("WeatherFront",
+        builder => builder
+            .WithOrigins("http://localhost:4200")
+            .AllowAnyMethod()
+            .AllowAnyHeader());
+});
+
 builder.Services.AddScoped<IMeteorologicalService, MeteorologicalService>();
 builder.Services.AddScoped<IMeteorologicalRepository, MeteorologicalRepository>();
 
@@ -29,6 +38,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseCors("WeatherFront");
 
 app.UseHttpsRedirection();
 
