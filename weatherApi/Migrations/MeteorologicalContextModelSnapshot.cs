@@ -35,15 +35,30 @@ namespace weatherApi.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("Humidity")
+                        .IsRequired()
+                        .HasColumnType("real");
+
                     b.Property<float>("Max_temperature")
                         .HasColumnType("real");
 
                     b.Property<float>("Min_temperature")
                         .HasColumnType("real");
 
-                    b.Property<string>("Weather")
+                    b.Property<float>("Precipitation")
+                        .HasColumnType("real");
+
+                    b.Property<string>("Weather_day")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<string>("Weather_night")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Wind_speed")
+                        .IsRequired()
+                        .HasColumnType("real");
 
                     b.HasKey("Id");
 

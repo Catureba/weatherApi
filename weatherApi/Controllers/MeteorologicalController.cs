@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Win32;
 using weatherApi.Data;
@@ -10,6 +11,7 @@ namespace weatherApi.Controllers
 {
     [ApiController]
     [Route("api/[Controller]/")]
+    [EnableCors("WeatherFront")]
     public class MeteorologicalController : ControllerBase
     {
         private IMeteorologicalService meteorologicalService;
@@ -70,8 +72,10 @@ namespace weatherApi.Controllers
         public IActionResult Put(Guid id, [FromBody] MeteorologicalDTO meteorologicalDTO)
         {
             MeteorologicalModel registerMeteorological = mapper.Map<MeteorologicalModel>(meteorologicalDTO);
-            meteorologicalService.EditMeteorologicalRegister(id, registerMeteorological);
-            return Ok("Edited the Meteorological register!");
+            var response = meteorologicalService.EditMeteorologicalRegister(id, registerMeteorological);
+            return response is null? 
+                NotFound():
+                Ok(response);
         }
 
         [HttpDelete("deleteRegisterMeteorologicalById/{id}")]
