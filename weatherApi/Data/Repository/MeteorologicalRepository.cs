@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics.Metrics;
 using System.Security.Cryptography;
 using weatherApi.Models;
@@ -61,14 +62,27 @@ namespace weatherApi.Data.Repository
         public MeteorologicalModel? EditMeteorologicalRegister(MeteorologicalModel meteorological)
         {
             var byEdit = _context.Weathers.FirstOrDefault(x => x.Id == meteorological.Id);
-            if(byEdit != null)
+            if (byEdit != null)
             {
-                var saved = _context.Weathers.Update(byEdit);
+                byEdit.Id = meteorological.Id;
+                byEdit.City = meteorological.City;
+                byEdit.Date = meteorological.Date;
+                byEdit.Humidity = meteorological.Humidity;
+                byEdit.Min_temperature = meteorological.Min_temperature;
+                byEdit.Max_temperature = meteorological.Max_temperature;
+                byEdit.Wind_speed = meteorological.Wind_speed;
+                byEdit.Weather_day = meteorological.Weather_day;
+                byEdit.Weather_night = meteorological.Weather_night;
+                byEdit.Precipitation = meteorological.Precipitation;
+
+                _context.Entry(byEdit).State = EntityState.Modified;
                 _context.SaveChanges();
-                return _mapper.Map<MeteorologicalModel>(saved.Entity);
+
+                return _mapper.Map<MeteorologicalModel>(byEdit);
             }
             return null;
         }
+
 
         public void DeleteMeteorologicalRegister(MeteorologicalModel meteorological)
         {

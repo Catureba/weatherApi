@@ -72,8 +72,10 @@ namespace weatherApi.Controllers
         public IActionResult Put(Guid id, [FromBody] MeteorologicalDTO meteorologicalDTO)
         {
             MeteorologicalModel registerMeteorological = mapper.Map<MeteorologicalModel>(meteorologicalDTO);
-            meteorologicalService.EditMeteorologicalRegister(id, registerMeteorological);
-            return Ok("Edited the Meteorological register!");
+            var response = meteorologicalService.EditMeteorologicalRegister(id, registerMeteorological);
+            return response is null? 
+                NotFound():
+                Ok(response);
         }
 
         [HttpDelete("deleteRegisterMeteorologicalById/{id}")]
