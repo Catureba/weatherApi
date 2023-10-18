@@ -22,10 +22,19 @@ namespace weatherApi.Controllers
             this.mapper = mapper;
         }
 
+
+        [HttpGet("listRegisters")]
+        public IActionResult ListAllRegisters(string? city = "", int skip = 0)
+        {
+            var allRegisters = meteorologicalService.ListWithPagination(skip, city);
+            return allRegisters.data.Any() ? Ok(allRegisters) : NotFound("Meteorological Data not Found");
+        }
+
+
         [HttpGet("FindAll")]
         public IActionResult GetAllRegisters()
         {
-            IEnumerable<MeteorologicalModel> meteorologicalList = meteorologicalService.ListAll();
+            var meteorologicalList = meteorologicalService.ListAll();
             return meteorologicalList.Any() ? Ok(meteorologicalList) : NotFound("Meteorological Data not Found");
         }
 
@@ -46,7 +55,7 @@ namespace weatherApi.Controllers
         [HttpGet("listByCity/{city}")]
         public IActionResult GetAllByCity(string city)
         {
-            IEnumerable<MeteorologicalModel> response = meteorologicalService.FindByCity(city);
+            var response = meteorologicalService.FindByCity(city);
             return response.Any() ? Ok(response) : NotFound("Meteorological Data not Found, choose another city");
         }
 

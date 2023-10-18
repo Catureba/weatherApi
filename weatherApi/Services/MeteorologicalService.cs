@@ -19,6 +19,37 @@ namespace weatherApi.Services
             _mapper = mapper;
         }
 
+        public MeteorologicalList ListWithPagination(int skip, string city = "")
+        {
+            int pageSize = 5;
+            if(city == "")
+            {
+                var meteorologicalList = _meteorologicalRepository.ListWithPagination(skip * pageSize);
+
+                MeteorologicalList allRegisters = new MeteorologicalList
+                {
+                    data = meteorologicalList,
+                    totalRegisters = meteorologicalList.Count,
+                    totalPages = meteorologicalList.Count % 5 + 1,
+                    atualPage = skip,
+                };
+                return allRegisters;
+            }
+            else
+            {
+                var meteorologicalList = _meteorologicalRepository.FindByCityWithPagination(city, skip * pageSize);
+
+                MeteorologicalList allRegisters = new MeteorologicalList
+                {
+                    data = meteorologicalList,
+                    totalRegisters = meteorologicalList.Count,
+                    totalPages = meteorologicalList.Count % 5 + 1,
+                    atualPage = skip,
+                };
+                return allRegisters;
+            }
+            
+        }
         public List<MeteorologicalModel> ListAll()
         {
             var meteorologicalList = _meteorologicalRepository.ListAll();
