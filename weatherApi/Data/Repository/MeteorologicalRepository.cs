@@ -21,10 +21,7 @@ namespace weatherApi.Data.Repository
         {
             return _context.Weathers.ToList();
         }
-        public List<MeteorologicalModel> ListWithPagination(int skip)
-        {
-            return _context.Weathers.Skip(skip).Take(5).ToList();
-        }
+
         public List<MeteorologicalModel> ListNextSeven(string city)
         {
             DateTime dateToday = DateTime.Now.Date;
@@ -48,11 +45,6 @@ namespace weatherApi.Data.Repository
             var response = _context.Weathers.Where(x => x.City == city.ToLower());
             return response.ToList();
         }
-        public List<MeteorologicalModel> FindByCityWithPagination(string city, int skip)
-        {
-            var response = _context.Weathers.Where(x => x.City == city.ToLower());
-            return response.Skip(skip).Take(5).ToList();
-        }
 
         public MeteorologicalModel? FindByCityToday(string city)
         {
@@ -71,7 +63,7 @@ namespace weatherApi.Data.Repository
         }
         public MeteorologicalModel? EditMeteorologicalRegister(MeteorologicalModel meteorological)
         {
-            var byEdit = _context.Weathers.FirstOrDefault(x => x.Id == meteorological.Id);
+            MeteorologicalModel? byEdit = _context.Weathers.FirstOrDefault(x => x.Id == meteorological.Id);
             if (byEdit != null)
             {
                 byEdit.Id = meteorological.Id;
