@@ -23,17 +23,11 @@ namespace weatherApi.Controllers
         }
 
 
-        [HttpGet("listRegisters/{city?}")]
-        public IActionResult ListAllRegisters(string? city = "")
+        [HttpGet("listRegisters")]
+        public IActionResult ListAllRegisters(string? city = "", int skip = 0)
         {
-            if(city == "")
-            {
-                var allRegisters = meteorologicalService.ListAll();
-                return allRegisters.data.Any() ? Ok(allRegisters) : NotFound("Meteorological Data not Found");
-            }
-
-            var meteorologicalList = meteorologicalService.FindByCity(city);
-            return meteorologicalList.data.Any() ? Ok(meteorologicalList) : NotFound("Meteorological Data not Found");
+            var allRegisters = meteorologicalService.ListWithPagination(skip, city);
+            return allRegisters.data.Any() ? Ok(allRegisters) : NotFound("Meteorological Data not Found");
         }
 
 
@@ -41,7 +35,7 @@ namespace weatherApi.Controllers
         public IActionResult GetAllRegisters()
         {
             var meteorologicalList = meteorologicalService.ListAll();
-            return meteorologicalList.data.Any() ? Ok(meteorologicalList) : NotFound("Meteorological Data not Found");
+            return meteorologicalList.Any() ? Ok(meteorologicalList) : NotFound("Meteorological Data not Found");
         }
 
         [HttpGet("listNextSevenDaysByCity/{city}")]
@@ -62,7 +56,7 @@ namespace weatherApi.Controllers
         public IActionResult GetAllByCity(string city)
         {
             var response = meteorologicalService.FindByCity(city);
-            return response.data.Any() ? Ok(response) : NotFound("Meteorological Data not Found, choose another city");
+            return response.Any() ? Ok(response) : NotFound("Meteorological Data not Found, choose another city");
         }
 
         [HttpGet("getRegisterByCityToday/{city}")]
