@@ -19,20 +19,32 @@ namespace weatherApi.Services
             _mapper = mapper;
         }
 
-        public List<MeteorologicalModel> ListAll()
+        public MeteorologicalList ListAll()
         {
             var meteorologicalList = _meteorologicalRepository.ListAll();
-            return meteorologicalList;
+
+            MeteorologicalList allRegisters = new MeteorologicalList
+            {
+                data = meteorologicalList,
+                totalRegisters = meteorologicalList.Count,
+            };
+            return allRegisters;
         }
         public List<MeteorologicalModel> ListNextSeven(string city)
         {
             List<MeteorologicalModel> meteorologicalListByCity = _meteorologicalRepository.ListNextSeven(city);
             return meteorologicalListByCity;
         }
-        public List<MeteorologicalModel> FindByCity(string city)
+        public MeteorologicalList FindByCity(string city)
         {
-            var meteorologicalListByCity = _meteorologicalRepository.FindByCity(city);
-            return meteorologicalListByCity;
+            var meteorologicalList = _meteorologicalRepository.FindByCity(city);
+
+            MeteorologicalList allRegisters = new MeteorologicalList
+            {
+                data = meteorologicalList,
+                totalRegisters = meteorologicalList.Count,
+            };
+            return allRegisters;
         }
         public MeteorologicalModel? FindByCityToday(string city)
         {
