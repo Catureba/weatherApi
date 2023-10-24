@@ -17,43 +17,49 @@ namespace weatherApi.Data.Repository
         }
         
         
-        public List<MeteorologicalModel> ListAll()
+        public async Task<List<MeteorologicalModel>> ListAll()
         {
-            return _context.Weathers.ToList();
+            List<MeteorologicalModel> listAll = new List<MeteorologicalModel>();
+            await Task.Run(() =>
+            {
+                listAll = _context.Weathers.ToList();
+                
+            });
+
+            return listAll;
         }
 
-        public List<MeteorologicalModel> ListNextSeven(string city)
+        public async Task<List<MeteorologicalModel>> ListNextSevenAsync(string city)
         {
-            DateTime dateToday = DateTime.Now.Date;
+            DateTime dateToday = DateTime.UtcNow.Date;
             DateTime todayMoreSevenDays = dateToday.AddDays(7);
-            var listByCity = new List<MeteorologicalModel>();
-            foreach (MeteorologicalModel meteorological in _context.Weathers.Where(x => x.City == city.ToLower()))
-            {
-                if (meteorological.Date.Date > dateToday && meteorological.Date.Date <= todayMoreSevenDays)
-                {
-                    listByCity.Add(meteorological);
-                }
-            }
+
+            
+
+            var listByCity = await _context.Weathers
+                .Where(x => 
+                    x.City == city.ToLower() &&
+                    x.Date.Date > dateToday && 
+                    x.Date.Date <= todayMoreSevenDays).ToListAsync();
+
             return listByCity;
         }
-        public MeteorologicalModel? FindByID(Guid id)
+
+        public async Task<MeteorologicalModel?> FindByID(Guid id)
         {
             return _context.Weathers.FirstOrDefault(x => x.Id == id);
         }
-        public List<MeteorologicalModel> FindByCity(string city)
+        public async Task<List<MeteorologicalModel>> FindByCity(string city)
         {
-            var response = _context.Weathers.Where(x => x.City == city.ToLower());
-            return response.ToList();
+            return await _context.Weathers.Where(x => x.City == city.ToLower()).ToListAsync(); ;
         }
 
-        public MeteorologicalModel? FindByCityToday(string city)
+        public async Task<MeteorologicalModel?> FindByCityToday(string city)
         {
-            DateTime dateToday = DateTime.Now.Date;
-            var meteorologicalModelsByCity = _context.Weathers.Where(x => x.City == city.ToLower());
-            foreach (MeteorologicalModel weather in meteorologicalModelsByCity) if (weather.Date.Date == dateToday) return weather;
-            return null;
+            DateTime dateToday = DateTime.UtcNow.Date;
+            return _context.Weathers.Where(x => x.City == city.ToLower()).FirstOrDefault(element => element.Date.Date == dateToday);
         }
-        public MeteorologicalModel? AddMeteorologicalRegister(MeteorologicalModel meteorologicalModel)
+        public async Task<MeteorologicalModel?> AddMeteorologicalRegister(MeteorologicalModel meteorologicalModel)
         {
             var responseEntity = _context.Weathers.Add(meteorologicalModel);
             MeteorologicalModel response = _mapper.Map<MeteorologicalModel>(responseEntity.Entity);
@@ -61,7 +67,7 @@ namespace weatherApi.Data.Repository
 
             return response;
         }
-        public MeteorologicalModel? EditMeteorologicalRegister(MeteorologicalModel meteorological)
+        public async Task<MeteorologicalModel?> EditMeteorologicalRegister(MeteorologicalModel meteorological)
         {
             MeteorologicalModel? byEdit = _context.Weathers.FirstOrDefault(x => x.Id == meteorological.Id);
             if (byEdit != null)
@@ -86,7 +92,7 @@ namespace weatherApi.Data.Repository
         }
 
 
-        public void DeleteMeteorologicalRegister(MeteorologicalModel meteorological)
+        public async Task DeleteMeteorologicalRegister(MeteorologicalModel meteorological)
         {
             _context.Weathers.Remove(meteorological);
             _context.SaveChanges();

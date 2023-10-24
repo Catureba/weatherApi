@@ -4,15 +4,15 @@ namespace weatherApi.Interfaces
 {
     public interface IMeteorologicalService
     {
-        MeteorologicalList ListWithPagination(int skip, string city);
-        List<MeteorologicalModel> ListAll();
-        List<MeteorologicalModel> ListNextSeven(string city);
-        MeteorologicalModel? FindByID(Guid id);
-        List<MeteorologicalModel> FindByCity(string city);
-        MeteorologicalModel? FindByCityToday(string city);
-        MeteorologicalModel? AddMeteorologicalRegister(MeteorologicalModel meteorological);
-        MeteorologicalModel? EditMeteorologicalRegister(Guid id, MeteorologicalModel meteorological);
-        void DeleteMeteorologicalRegister(Guid id);
-        Boolean ValidateExistMeteorologicalRegister(MeteorologicalModel meteorological);
+        Task<MeteorologicalList> ListWithPagination(int skip, string city);
+        Task<List<MeteorologicalModel>> ListAll();
+        Task<List<MeteorologicalModel>> ListNextSeven(string city);
+        Task<MeteorologicalModel?> FindByID(Guid id);
+        Task<List<MeteorologicalModel>> FindByCity(string city);
+        Task<MeteorologicalModel?> FindByCityToday(string city);
+        Task<MeteorologicalModel?> AddMeteorologicalRegister(MeteorologicalModel meteorological);
+        Task<MeteorologicalModel?> EditMeteorologicalRegister(Guid id, MeteorologicalModel meteorological);
+        Task DeleteMeteorologicalRegister(Guid id);
+        Task<Boolean> ValidateExistMeteorologicalRegister(MeteorologicalModel meteorological);
     }
 }
