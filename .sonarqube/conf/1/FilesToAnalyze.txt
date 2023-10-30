@@ -1,0 +1,8 @@
+﻿C:\Users\mateus.santana\Documents\projetos\weatherApi\WeatherApi.Tests\Services\MeteorologicalServiceTests.cs
+C:\Users\mateus.santana\.nuget\packages\microsoft.net.test.sdk\17.7.1\build\netcoreapp3.1\Microsoft.NET.Test.Sdk.Program.cs
+C:\Users\mateus.santana\.nuget\packages\microsoft.testplatform.testhost\17.7.1\build\netcoreapp3.1\x64\testhost.exe
+C:\Users\mateus.santana\.nuget\packages\microsoft.testplatform.testhost\17.7.1\build\netcoreapp3.1\x64\testhost.dll
+C:\Users\mateus.santana\.nuget\packages\xunit.runner.visualstudio\2.5.0\build\net6.0\xunit.runner.visualstudio.dotnetcore.testadapter.dll
+C:\Users\mateus.santana\.nuget\packages\xunit.runner.visualstudio\2.5.0\build\net6.0\xunit.runner.reporters.netcoreapp10.dll
+C:\Users\mateus.santana\.nuget\packages\xunit.runner.visualstudio\2.5.0\build\net6.0\xunit.runner.utility.netcoreapp10.dll
+C:\Users\mateus.santana\Documents\projetos\weatherApi\WeatherApi.Tests\coverage.opencover.xml
